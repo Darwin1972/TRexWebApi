@@ -38,7 +38,7 @@ namespace TRexWebApi
                                       builder.AllowAnyOrigin()
                                              .AllowAnyHeader()
                                              .AllowAnyMethod();
-                                             //.AllowCredentials();
+                                      //.AllowCredentials();
                                   });
             });
 
