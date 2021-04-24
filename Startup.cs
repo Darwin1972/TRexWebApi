@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using TRexWebApi.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -29,7 +31,7 @@ namespace TRexWebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
+            /*services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
@@ -40,13 +42,23 @@ namespace TRexWebApi
                                              .AllowAnyMethod();
                                       //.AllowCredentials();
                                   });
-            });
+            });*/
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TRexWebApi", Version = "v1" });
             });
+            services.AddEntityFrameworkSqlServer();
+            services.AddDbContext<ApplicationDbContext>(options =>
+               options.UseSqlServer(
+                   Configuration.GetConnectionString("DefaultConnection")
+                   )
+            );
+            services.AddControllersWithViews().AddJsonOptions(options => { options.JsonSerializerOptions.WriteIndented = true; });
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,7 +79,7 @@ namespace TRexWebApi
 
             // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
             
-            app.UseCors(MyAllowSpecificOrigins);
+            //app.UseCors(MyAllowSpecificOrigins);
 
 
             app.UseEndpoints(endpoints =>
